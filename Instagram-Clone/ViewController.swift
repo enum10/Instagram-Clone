@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Firebase
 
 class ViewController: UIViewController {
     
@@ -55,6 +55,7 @@ class ViewController: UIViewController {
         view.setTitleColor(.white, for: .normal)
         view.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         view.layer.cornerRadius = 5
+        view.isEnabled = false
         view.addTarget(self, action: #selector(signUpButtonAction), for: .touchUpInside)
         return view
     }()
@@ -102,7 +103,18 @@ class ViewController: UIViewController {
                 return
             }
             
-            print("Successfully created user: ", user?.uid ?? "")
+            guard let uid = user?.uid else { return }
+            
+            let dictionaryValues = ["username": username]
+            let values = [uid: dictionaryValues]
+            Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (error, ref) in
+                if let error = error {
+                    print("Adding user to database gave an error: ", error)
+                    return
+                }
+                
+                print("Successfully added user info to database")
+            })
         }
     }
 }
