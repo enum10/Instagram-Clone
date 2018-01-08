@@ -106,7 +106,7 @@ class ViewController: UIViewController {
         guard let username = usernameTextField.text, username.count > 0 else { return }
         guard let password = passwordTextField.text, password.count > 0 else { return }
         
-        Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] (user, error) in
             if let error = error {
                 print("User creation failed with an error: ", error)
                 return
@@ -114,15 +114,25 @@ class ViewController: UIViewController {
             
             guard let uid = user?.uid else { return }
             
-            let dictionaryValues = ["username": username]
-            let values = [uid: dictionaryValues]
-            Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (error, ref) in
+            guard let image = self?.plusPhotoButton.imageView?.image, let imageData = UIImageJPEGRepresentation(image, 0.5) else { return }
+            let imageId = NSUUID().uuidString
+            Storage.storage().reference().child("profile_images").child(imageId).putData(imageData, metadata: nil, completion: { (metadata, error) in
                 if let error = error {
-                    print("Adding user to database gave an error: ", error)
+                    print("Saving image to the cloud gave an error: ", error)
                     return
                 }
                 
-                print("Successfully added user info to database")
+                guard let imageUrlString = metadata?.downloadURL()?.absoluteString else { return }
+                let dictionaryValues = ["username": username, "imageUrl": imageUrlString]
+                let values = [uid: dictionaryValues]
+                Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (error, ref) in
+                    if let error = error {
+                        print("Adding user to database gave an error: ", error)
+                        return
+                    }
+                    
+                    print("Successfully added user info to database")
+                })
             })
         }
     }
