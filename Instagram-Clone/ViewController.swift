@@ -62,7 +62,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.addSubview(plusPhotoButton)
         NSLayoutConstraint.activate([
-            plusPhotoButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40),
+            plusPhotoButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 80),
             plusPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             plusPhotoButton.widthAnchor.constraint(equalToConstant: 140),
             plusPhotoButton.heightAnchor.constraint(equalToConstant: 140)
