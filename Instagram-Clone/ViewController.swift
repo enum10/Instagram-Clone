@@ -80,6 +80,14 @@ class ViewController: UIViewController {
     }
     
     @objc
+    func plusPhotoButtonAction() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.allowsEditing = true
+        imagePickerController.delegate = self
+        present(imagePickerController, animated: true, completion: nil)
+    }
+    
+    @objc
     func inputTextFieldsTextChanged() {
         guard let email = emailTextField.text, let username = usernameTextField.text, let password = passwordTextField.text, email.count > 0, username.count > 0, password.count > 0 else {
             signUpButton.isEnabled = false
@@ -116,6 +124,30 @@ class ViewController: UIViewController {
                 print("Successfully added user info to database")
             })
         }
+    }
+}
+
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        var selectedImage: UIImage!
+        
+        if let editedImage = info[UIImagePickerControllerEditedImage] as? UIImage {
+            selectedImage = editedImage
+        } else if let originalImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            selectedImage = originalImage
+        }
+        
+        plusPhotoButton.setImage(selectedImage.withRenderingMode(.alwaysOriginal), for: .normal)
+        plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.size.width / 2
+        plusPhotoButton.clipsToBounds = true
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
 }
 
