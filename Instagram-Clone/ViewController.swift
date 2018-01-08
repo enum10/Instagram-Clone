@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ViewController: UIViewController {
     
@@ -22,6 +23,7 @@ class ViewController: UIViewController {
         view.borderStyle = .roundedRect
         view.font = UIFont.systemFont(ofSize: 14)
         view.placeholder = "Email"
+        view.addTarget(self, action: #selector(inputTextFieldsTextChanged), for: .editingChanged)
         return view
     }()
     
@@ -31,6 +33,7 @@ class ViewController: UIViewController {
         view.borderStyle = .roundedRect
         view.font = UIFont.systemFont(ofSize: 14)
         view.placeholder = "Username"
+        view.addTarget(self, action: #selector(inputTextFieldsTextChanged), for: .editingChanged)
         return view
     }()
     
@@ -41,6 +44,7 @@ class ViewController: UIViewController {
         view.borderStyle = .roundedRect
         view.font = UIFont.systemFont(ofSize: 14)
         view.placeholder = "Password"
+        view.addTarget(self, action: #selector(inputTextFieldsTextChanged), for: .editingChanged)
         return view
     }()
     
@@ -51,6 +55,7 @@ class ViewController: UIViewController {
         view.setTitleColor(.white, for: .normal)
         view.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         view.layer.cornerRadius = 5
+        view.addTarget(self, action: #selector(signUpButtonAction), for: .touchUpInside)
         return view
     }()
 
@@ -71,6 +76,34 @@ class ViewController: UIViewController {
         
         view.addSubview(stackView)
         stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, topPadding: 20, leftPadding: 40, bottomPadding: 0, rightPadding: 40, width: 0, height: 200)
+    }
+    
+    @objc
+    func inputTextFieldsTextChanged() {
+        guard let email = emailTextField.text, let username = usernameTextField.text, let password = passwordTextField.text, email.count > 0, username.count > 0, password.count > 0 else {
+            signUpButton.isEnabled = false
+            signUpButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+            return
+        }
+        
+        signUpButton.isEnabled = true
+        signUpButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 204)
+    }
+    
+    @objc
+    func signUpButtonAction() {
+        guard let email = emailTextField.text, email.count > 0 else { return }
+        guard let username = usernameTextField.text, username.count > 0 else { return }
+        guard let password = passwordTextField.text, password.count > 0 else { return }
+        
+        Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
+            if let error = error {
+                print("User creation failed with an error: ", error)
+                return
+            }
+            
+            print("Successfully created user: ", user?.uid ?? "")
+        }
     }
 }
 
