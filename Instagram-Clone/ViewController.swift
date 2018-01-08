@@ -12,9 +12,10 @@ import Firebase
 class ViewController: UIViewController {
     
     let plusPhotoButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "plus_photo").withRenderingMode(.alwaysOriginal), for: .normal)
-        return button
+        let view = UIButton(type: .system)
+        view.setImage(#imageLiteral(resourceName: "plus_photo").withRenderingMode(.alwaysOriginal), for: .normal)
+        view.addTarget(self, action: #selector(plusPhotoButtonAction), for: .touchUpInside)
+        return view
     }()
     
     let emailTextField: UITextField = {
@@ -142,6 +143,8 @@ extension ViewController: UIImagePickerControllerDelegate, UINavigationControlle
         plusPhotoButton.setImage(selectedImage.withRenderingMode(.alwaysOriginal), for: .normal)
         plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.size.width / 2
         plusPhotoButton.clipsToBounds = true
+        plusPhotoButton.layer.borderColor = UIColor.black.cgColor
+        plusPhotoButton.layer.borderWidth = 2
         
         dismiss(animated: true, completion: nil)
     }
