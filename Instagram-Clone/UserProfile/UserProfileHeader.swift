@@ -10,31 +10,50 @@ import UIKit
 
 class UserProfilerHeader: UICollectionViewCell {
     
+    var user: InstagramUser? {
+        didSet {
+            setupProfileImage()
+        }
+    }
+    
     let userImageView: UIImageView = {
         let view = UIImageView()
-        view.backgroundColor = .red
+        return view
+    }()
+    
+    let gridButton: UIButton = {
+        let view = UIButton(type: .system)
+        view.setImage(#imageLiteral(resourceName: "grid"), for: .normal)
+        return view
+    }()
+    
+    let listButton: UIButton = {
+        let view = UIButton(type: .system)
+        view.tintColor = UIColor(white: 0, alpha: 0.2)
+        view.setImage(#imageLiteral(resourceName: "list"), for: .normal)
+        return view
+    }()
+    
+    let bookmarkButton: UIButton = {
+        let view = UIButton(type: .system)
+        view.tintColor = UIColor(white: 0, alpha: 0.2)
+        view.setImage(#imageLiteral(resourceName: "ribbon"), for: .normal)
         return view
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = .blue
-        
         addSubview(userImageView)
         userImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, topPadding: 12, leftPadding: 12, bottomPadding: 0, rightPadding: 0, width: 80, height: 80)
         userImageView.layer.cornerRadius = 80 / 2
         userImageView.clipsToBounds = true
+        
+        setupBottomToolbar()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    var user: InstagramUser? {
-        didSet {
-            setupProfileImage()
-        }
     }
     
     fileprivate func setupProfileImage() {
@@ -51,5 +70,13 @@ class UserProfilerHeader: UICollectionViewCell {
                 self?.userImageView.image = image
             }
         }.resume()
+    }
+    
+    fileprivate func setupBottomToolbar() {
+        let stackView = UIStackView(arrangedSubviews: [gridButton, listButton, bookmarkButton])
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        addSubview(stackView)
+        stackView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, topPadding: 0, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 50)
     }
 }
