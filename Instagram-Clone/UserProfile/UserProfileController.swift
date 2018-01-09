@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class UserProfileController: UICollectionViewController {
+class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     override func viewDidLoad() {
         super.viewDidLoad()

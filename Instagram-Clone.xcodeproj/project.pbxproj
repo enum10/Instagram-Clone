@@ -16,6 +16,7 @@
 		5480BD1420042C4200171C61 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5480BD1320042C4200171C61 /* GoogleService-Info.plist */; };
 		5480BD162004420B00171C61 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5480BD152004420B00171C61 /* MainTabBarController.swift */; };
 		5480BD182004422D00171C61 /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5480BD172004422D00171C61 /* UserProfileController.swift */; };
+		5480BD1B20044AAA00171C61 /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5480BD1A20044AAA00171C61 /* UserProfileHeader.swift */; };
 		9FA83569F011896437C787D4 /* Pods_Instagram_Clone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91D606726472DA1EF4F929EA /* Pods_Instagram_Clone.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,7 @@
 		5480BD1320042C4200171C61 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5480BD152004420B00171C61 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		5480BD172004422D00171C61 /* UserProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
+		5480BD1A20044AAA00171C61 /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
 		91D606726472DA1EF4F929EA /* Pods_Instagram_Clone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Instagram_Clone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2D4A7C88D1AA842C58CBCF1 /* Pods-Instagram-Clone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram-Clone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram-Clone/Pods-Instagram-Clone.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -69,11 +71,11 @@
 		5480BCFD200410EB00171C61 /* Instagram-Clone */ = {
 			isa = PBXGroup;
 			children = (
+				5480BD1920044A9700171C61 /* UserProfile */,
 				5480BD1020041F8500171C61 /* Utilities */,
 				5480BCFE200410EB00171C61 /* AppDelegate.swift */,
 				5480BD00200410EB00171C61 /* ViewController.swift */,
 				5480BD152004420B00171C61 /* MainTabBarController.swift */,
-				5480BD172004422D00171C61 /* UserProfileController.swift */,
 				5480BD02200410EB00171C61 /* Main.storyboard */,
 				5480BD05200410EB00171C61 /* Assets.xcassets */,
 				5480BD07200410EB00171C61 /* LaunchScreen.storyboard */,
@@ -89,6 +91,15 @@
 				5480BD1120041F9100171C61 /* Extensions.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		5480BD1920044A9700171C61 /* UserProfile */ = {
+			isa = PBXGroup;
+			children = (
+				5480BD172004422D00171C61 /* UserProfileController.swift */,
+				5480BD1A20044AAA00171C61 /* UserProfileHeader.swift */,
+			);
+			path = UserProfile;
 			sourceTree = "<group>";
 		};
 		609D1FB155B636188EA64BA2 /* Frameworks */ = {
@@ -247,6 +258,7 @@
 				5480BD01200410EB00171C61 /* ViewController.swift in Sources */,
 				5480BD1220041F9100171C61 /* Extensions.swift in Sources */,
 				5480BD162004420B00171C61 /* MainTabBarController.swift in Sources */,
+				5480BD1B20044AAA00171C61 /* UserProfileHeader.swift in Sources */,
 				5480BD182004422D00171C61 /* UserProfileController.swift in Sources */,
 				5480BCFF200410EB00171C61 /* AppDelegate.swift in Sources */,
 			);
