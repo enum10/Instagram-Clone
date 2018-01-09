@@ -73,6 +73,7 @@
 				5480BCFE200410EB00171C61 /* AppDelegate.swift */,
 				5480BD00200410EB00171C61 /* ViewController.swift */,
 				5480BD152004420B00171C61 /* MainTabBarController.swift */,
+				5480BD172004422D00171C61 /* UserProfileController.swift */,
 				5480BD02200410EB00171C61 /* Main.storyboard */,
 				5480BD05200410EB00171C61 /* Assets.xcassets */,
 				5480BD07200410EB00171C61 /* LaunchScreen.storyboard */,
@@ -86,7 +87,6 @@
 			isa = PBXGroup;
 			children = (
 				5480BD1120041F9100171C61 /* Extensions.swift */,
-				5480BD172004422D00171C61 /* UserProfileController.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
