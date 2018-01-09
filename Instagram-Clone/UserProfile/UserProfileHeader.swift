@@ -131,6 +131,17 @@ class UserProfilerHeader: UICollectionViewCell {
         stackView.distribution = .fillEqually
         addSubview(stackView)
         stackView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, topPadding: 0, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 50)
+        
+        let topBorder = UIView()
+        topBorder.backgroundColor = .lightGray
+        
+        let bottomBorder = UIView()
+        bottomBorder.backgroundColor = .lightGray
+        
+        addSubview(topBorder)
+        addSubview(bottomBorder)
+        topBorder.anchor(top: stackView.topAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, topPadding: 0, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 0.5)
+        bottomBorder.anchor(top: nil, left: leftAnchor, bottom: stackView.bottomAnchor, right: rightAnchor, topPadding: 0, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 0.5)
     }
     
     fileprivate func setupUserStats() {
