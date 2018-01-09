@@ -71,6 +71,17 @@ class UserProfilerHeader: UICollectionViewCell {
         return view
     }()
     
+    let editProfileButton: UIButton = {
+        let view = UIButton(type: .system)
+        view.setTitle("Edit Profile", for: .normal)
+        view.setTitleColor(.black, for: .normal)
+        view.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        view.layer.cornerRadius = 5
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -81,6 +92,8 @@ class UserProfilerHeader: UICollectionViewCell {
         
         setupBottomToolbar()
         setupUserStats()
+        addSubview(editProfileButton)
+        editProfileButton.anchor(top: postsLabel.bottomAnchor, left: postsLabel.leftAnchor, bottom: nil, right: followingLabel.rightAnchor, topPadding: 2, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 34)
     }
     
     required init?(coder aDecoder: NSCoder) {
