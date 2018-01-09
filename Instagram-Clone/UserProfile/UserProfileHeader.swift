@@ -13,6 +13,7 @@ class UserProfilerHeader: UICollectionViewCell {
     var user: InstagramUser? {
         didSet {
             setupProfileImage()
+            usernameLabel.text = user?.username
         }
     }
     
@@ -82,6 +83,12 @@ class UserProfilerHeader: UICollectionViewCell {
         return view
     }()
     
+    let usernameLabel: UILabel = {
+        let view = UILabel()
+        view.font = UIFont.boldSystemFont(ofSize: 14)
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -94,6 +101,8 @@ class UserProfilerHeader: UICollectionViewCell {
         setupUserStats()
         addSubview(editProfileButton)
         editProfileButton.anchor(top: postsLabel.bottomAnchor, left: postsLabel.leftAnchor, bottom: nil, right: followingLabel.rightAnchor, topPadding: 2, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 34)
+        addSubview(usernameLabel)
+        usernameLabel.anchor(top: editProfileButton.bottomAnchor, left: leftAnchor, bottom: gridButton.topAnchor, right: rightAnchor, topPadding: 3, leftPadding: 12, bottomPadding: 0, rightPadding: 12, width: 0, height: 0)
     }
     
     required init?(coder aDecoder: NSCoder) {
