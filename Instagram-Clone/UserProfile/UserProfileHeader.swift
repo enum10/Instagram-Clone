@@ -41,6 +41,36 @@ class UserProfilerHeader: UICollectionViewCell {
         return view
     }()
     
+    let postsLabel: UILabel = {
+        let view = UILabel()
+        let attributedText = NSMutableAttributedString(string: "11\n", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14)])
+        attributedText.append(NSAttributedString(string: "posts", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray]))
+        view.attributedText = attributedText
+        view.numberOfLines = 0
+        view.textAlignment = .center
+        return view
+    }()
+    
+    let followersLabel: UILabel = {
+        let view = UILabel()
+        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14)])
+        attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray]))
+        view.attributedText = attributedText
+        view.numberOfLines = 0
+        view.textAlignment = .center
+        return view
+    }()
+    
+    let followingLabel: UILabel = {
+        let view = UILabel()
+        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14)])
+        attributedText.append(NSAttributedString(string: "following", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray]))
+        view.attributedText = attributedText
+        view.numberOfLines = 0
+        view.textAlignment = .center
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -50,6 +80,7 @@ class UserProfilerHeader: UICollectionViewCell {
         userImageView.clipsToBounds = true
         
         setupBottomToolbar()
+        setupUserStats()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -78,5 +109,13 @@ class UserProfilerHeader: UICollectionViewCell {
         stackView.distribution = .fillEqually
         addSubview(stackView)
         stackView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, topPadding: 0, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 50)
+    }
+    
+    fileprivate func setupUserStats() {
+        let stackView = UIStackView(arrangedSubviews: [postsLabel, followersLabel, followingLabel])
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        addSubview(stackView)
+        stackView.anchor(top: topAnchor, left: userImageView.rightAnchor, bottom: nil, right: rightAnchor, topPadding: 12, leftPadding: 12, bottomPadding: 0, rightPadding: 12, width: 0, height: 50)
     }
 }
