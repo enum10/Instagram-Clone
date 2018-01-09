@@ -33,7 +33,23 @@ class UserProfilerHeader: UICollectionViewCell {
     
     var user: InstagramUser? {
         didSet {
-            
+            setupProfileImage()
         }
+    }
+    
+    fileprivate func setupProfileImage() {
+        guard let profileImageUrlString = user?.imageUrl, let url = URL(string: profileImageUrlString) else { return }
+        
+        URLSession.shared.dataTask(with: url) { [weak self] (data, _, error) in
+            if let error = error {
+                print("Error downloading user image: ", error)
+                return
+            }
+            
+            guard let data = data, let image = UIImage(data: data) else { return }
+            DispatchQueue.main.async {
+                self?.userImageView.image = image
+            }
+        }.resume()
     }
 }

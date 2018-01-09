@@ -34,7 +34,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
 
     func fetchUserData() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
             guard let dictionary = snapshot.value as? [String: Any] else { return }
             self?.user = InstagramUser(dictionary: dictionary)
@@ -53,6 +52,6 @@ struct InstagramUser {
     
     init(dictionary: [String: Any]) {
         username = dictionary["username"] as? String ?? ""
-        imageUrl = dictionary["imagUrl"] as? String ?? ""
+        imageUrl = dictionary["imageUrl"] as? String ?? ""
     }
 }
