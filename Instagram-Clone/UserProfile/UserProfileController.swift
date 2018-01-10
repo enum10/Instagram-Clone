@@ -49,7 +49,11 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     func signOutAction() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
-            //
+            do {
+                try Auth.auth().signOut()
+            } catch let err {
+                print("Error while loggin out: ", err)
+            }
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
