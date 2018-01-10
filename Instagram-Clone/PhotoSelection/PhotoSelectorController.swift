@@ -28,7 +28,7 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         setupNavigationBarButtons()
         
         collectionView?.register(PhotoSelectorCell.self, forCellWithReuseIdentifier: cellId)
-        collectionView?.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
+        collectionView?.register(PhotoSelectorHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
         
         fetchPhotos()
     }
@@ -44,8 +44,16 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
-        header.backgroundColor = .red
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as! PhotoSelectorHeader
+        header.imageView.image = selectedImage
+        if let selectedImage = selectedImage, let index = images.index(of: selectedImage) {
+            let selectedAsset = assets[index]
+            let imageManager = PHImageManager.default()
+            let size = CGSize(width: 600, height: 600)
+            imageManager.requestImage(for: selectedAsset, targetSize: size, contentMode: .aspectFit, options: nil, resultHandler: { (image, info) in
+                header.imageView.image = image
+            })
+        }
         return header
     }
     
@@ -91,6 +99,10 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
             imageManager.requestImage(for: asset, targetSize: size, contentMode: .aspectFit, options: options, resultHandler: {[weak self] (image, info) in
                 if let image = image {
                     self?.images.append(image)
+                    self?.assets.append(asset)
+                    if self?.selectedImage == nil {
+                        self?.selectedImage = image
+                    }
                 }
                 
                 if index == allPhotos.count - 1 {
