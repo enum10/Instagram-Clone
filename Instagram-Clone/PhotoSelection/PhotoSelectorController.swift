@@ -15,6 +15,8 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     let headerId = "headerId"
     
     var images = [UIImage]()
+    var assets = [PHAsset]()
+    var selectedImage: UIImage?
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -22,12 +24,10 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        collectionView?.backgroundColor = .yellow
-        
+        collectionView?.backgroundColor = .white
         setupNavigationBarButtons()
         
-        collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView?.register(PhotoSelectorCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
         
         fetchPhotos()
@@ -38,8 +38,8 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
-        cell.backgroundColor = .purple
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! PhotoSelectorCell
+        cell.imageView.image = images[indexPath.item]
         return cell
     }
     
@@ -71,9 +71,15 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         return UIEdgeInsetsMake(1, 0, 0, 0)
     }
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let image = images[indexPath.item]
+        self.selectedImage = image
+        self.collectionView?.reloadData()
+    }
+    
     fileprivate func fetchPhotos() {
         let fetchOptions = PHFetchOptions()
-        fetchOptions.fetchLimit = 10
+        fetchOptions.fetchLimit = 30
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
         fetchOptions.sortDescriptors = [sortDescriptor]
         let allPhotos = PHAsset.fetchAssets(with: .image, options: fetchOptions)
@@ -81,7 +87,7 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
             let imageManager = PHImageManager.default()
             let options = PHImageRequestOptions()
             options.isSynchronous = true
-            let size = CGSize(width: 350, height: 350)
+            let size = CGSize(width: 200, height: 200)
             imageManager.requestImage(for: asset, targetSize: size, contentMode: .aspectFit, options: options, resultHandler: {[weak self] (image, info) in
                 if let image = image {
                     self?.images.append(image)
