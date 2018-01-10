@@ -23,6 +23,12 @@ class SharePhotoController: UIViewController {
         return view
     }()
     
+    let textView: UITextView = {
+        let view = UITextView()
+        view.font = UIFont.systemFont(ofSize: 14)
+        return view
+    }()
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -47,6 +53,9 @@ class SharePhotoController: UIViewController {
         containerView.addSubview(imageView)
         imageView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: containerView.bottomAnchor, right: nil, topPadding: 8, leftPadding: 8, bottomPadding: 8, rightPadding: 0, width: 0, height: 0)
         imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 1).isActive = true
+        
+        containerView.addSubview(textView)
+        textView.anchor(top: containerView.topAnchor, left: imageView.rightAnchor, bottom: containerView.bottomAnchor, right: containerView.rightAnchor, topPadding: 0, leftPadding: 4, bottomPadding: 0, rightPadding: 4, width: 0, height: 0)
     }
     
     @objc
