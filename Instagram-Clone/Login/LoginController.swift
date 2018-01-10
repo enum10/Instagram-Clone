@@ -57,8 +57,10 @@ class LoginController: UIViewController {
     
     let dontHaveAccountButton: UIButton = {
         let view = UIButton(type: .system)
-        view.setTitle("Don't have an account? Sign up", for: .normal)
-        view.addTarget(self, action: #selector(signUpAction), for: .touchUpInside)
+        let attributedString = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+        attributedString.append(NSAttributedString(string: "Sign up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 204)]))
+        view.setAttributedTitle(attributedString, for: .normal)
+        view.addTarget(self, action: #selector(dontHaveAccountAction), for: .touchUpInside)
         return view
     }()
     
@@ -91,7 +93,7 @@ class LoginController: UIViewController {
     }
     
     @objc
-    func signUpAction() {
+    func dontHaveAccountAction() {
         let signUpController = SignUpController()
         self.navigationController?.pushViewController(signUpController, animated: true)
     }
