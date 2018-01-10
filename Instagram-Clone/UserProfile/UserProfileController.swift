@@ -48,9 +48,12 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     @objc
     func signOutAction() {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
+        alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { [weak self] (_) in
             do {
                 try Auth.auth().signOut()
+                let loginController = LoginController()
+                let navController = UINavigationController(rootViewController: loginController)
+                self?.present(navController, animated: true, completion: nil)
             } catch let err {
                 print("Error while loggin out: ", err)
             }
