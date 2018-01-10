@@ -12,6 +12,7 @@ import Firebase
 class UserProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     var user: InstagramUser?
+    var posts = [Post]()
     
     let cellId = "cellId"
     
@@ -25,6 +26,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
         
         setupLogOutButton()
+        fetchPosts()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -64,7 +66,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
+        return posts.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -95,14 +97,20 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
             print("Error getting user data in UserProfileController: ", error)
         }
     }
-}
-
-struct InstagramUser {
-    var username: String
-    var imageUrl: String
     
-    init(dictionary: [String: Any]) {
-        username = dictionary["username"] as? String ?? ""
-        imageUrl = dictionary["imageUrl"] as? String ?? ""
+    func fetchPosts() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let ref = Database.database().reference().child("posts").child(uid)
+        ref.observeSingleEvent(of: .value, with: {[weak self] (snapshot) in
+            guard let dictionaries = snapshot.value as? [String: Any] else {return}
+            dictionaries.forEach({ (key, value) in
+                guard let dictionary = value as? [String: Any] else { return }
+                let post = Post(dictionary: dictionary)
+                self?.posts.append(post)
+            })
+            self?.collectionView?.reloadData()
+        }) { (error) in
+            print("Error while downloading user posts in user profile controller: ", error)
+        }
     }
 }
