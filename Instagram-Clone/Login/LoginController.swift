@@ -28,7 +28,7 @@ class LoginController: UIViewController {
         view.borderStyle = .roundedRect
         view.font = UIFont.systemFont(ofSize: 14)
         view.placeholder = "Email"
-//        view.addTarget(self, action: #selector(inputTextFieldsTextChanged), for: .editingChanged)
+        view.addTarget(self, action: #selector(inputTextFieldsTextChanged), for: .editingChanged)
         return view
     }()
     
@@ -39,7 +39,7 @@ class LoginController: UIViewController {
         view.borderStyle = .roundedRect
         view.font = UIFont.systemFont(ofSize: 14)
         view.placeholder = "Password"
-//        view.addTarget(self, action: #selector(inputTextFieldsTextChanged), for: .editingChanged)
+        view.addTarget(self, action: #selector(inputTextFieldsTextChanged), for: .editingChanged)
         return view
     }()
     
@@ -101,5 +101,17 @@ class LoginController: UIViewController {
     @objc
     func loginButtonAction() {
         
+    }
+    
+    @objc
+    func inputTextFieldsTextChanged() {
+        guard let email = emailTextField.text, let password = passwordTextField.text, email.count > 0, password.count > 0 else {
+            loginButton.isEnabled = false
+            loginButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+            return
+        }
+        
+        loginButton.isEnabled = true
+        loginButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 204)
     }
 }
