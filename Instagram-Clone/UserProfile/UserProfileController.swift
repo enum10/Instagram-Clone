@@ -101,13 +101,10 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     func fetchPosts() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let ref = Database.database().reference().child("posts").child(uid)
-        ref.observeSingleEvent(of: .value, with: {[weak self] (snapshot) in
-            guard let dictionaries = snapshot.value as? [String: Any] else {return}
-            dictionaries.forEach({ (key, value) in
-                guard let dictionary = value as? [String: Any] else { return }
-                let post = Post(dictionary: dictionary)
-                self?.posts.append(post)
-            })
+        ref.queryOrdered(byChild: "creationDate").observe(.childAdded, with: {[weak self] (snapshot) in
+            guard let dictionary = snapshot.value as? [String: Any] else { return }
+            let post = Post(dictionary: dictionary)
+            self?.posts.insert(post, at: 0)
             self?.collectionView?.reloadData()
         }) { (error) in
             print("Error while downloading user posts in user profile controller: ", error)
