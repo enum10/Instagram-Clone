@@ -58,6 +58,11 @@ class MainTabBarController: UITabBarController {
             plusNavController,
             likedNavController,
             userProfileNavController]
+        
+        guard let items = tabBar.items else { return }
+        for item in items {
+            item.imageInsets = UIEdgeInsetsMake(4, 0, -4, 0)
+        }
     }
     
     fileprivate func templateNavController(unselectedImage: UIImage, selectedImage: UIImage, rootViewController: UIViewController = UIViewController()) -> UINavigationController {
