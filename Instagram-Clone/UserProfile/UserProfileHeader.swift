@@ -12,13 +12,14 @@ class UserProfilerHeader: UICollectionViewCell {
     
     var user: InstagramUser? {
         didSet {
-            setupProfileImage()
+            guard let profileImageUrlString = user?.imageUrl else { return }
+            userImageView.loadImage(with: profileImageUrlString)
             usernameLabel.text = user?.username
         }
     }
     
-    let userImageView: UIImageView = {
-        let view = UIImageView()
+    let userImageView: CustomImageView = {
+        let view = CustomImageView()
         return view
     }()
     
@@ -107,22 +108,6 @@ class UserProfilerHeader: UICollectionViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    fileprivate func setupProfileImage() {
-        guard let profileImageUrlString = user?.imageUrl, let url = URL(string: profileImageUrlString) else { return }
-        
-        URLSession.shared.dataTask(with: url) { [weak self] (data, _, error) in
-            if let error = error {
-                print("Error downloading user image: ", error)
-                return
-            }
-            
-            guard let data = data, let image = UIImage(data: data) else { return }
-            DispatchQueue.main.async {
-                self?.userImageView.image = image
-            }
-        }.resume()
     }
     
     fileprivate func setupBottomToolbar() {
