@@ -18,6 +18,8 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     var assets = [PHAsset]()
     var selectedImage: UIImage?
     
+    var header: PhotoSelectorHeader?
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -45,6 +47,7 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as! PhotoSelectorHeader
+        self.header = header
         header.imageView.image = selectedImage
         if let selectedImage = selectedImage, let index = images.index(of: selectedImage) {
             let selectedAsset = assets[index]
@@ -125,6 +128,8 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     @objc
     func nextAction() {
-        print("Next")
+        let sharePhotoController = SharePhotoController()
+        sharePhotoController.selectedImage = header?.imageView.image
+        navigationController?.pushViewController(sharePhotoController, animated: true)
     }
 }
