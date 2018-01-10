@@ -25,7 +25,7 @@ class UserProfilePhotoCell: UICollectionViewCell {
                 DispatchQueue.main.async { [weak self] in
                     self?.imageView.image = image
                 }
-            }
+            }.resume()
         }
     }
     
