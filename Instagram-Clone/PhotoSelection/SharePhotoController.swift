@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class SharePhotoController: UIViewController {
     
@@ -60,7 +61,37 @@ class SharePhotoController: UIViewController {
     
     @objc
     func shareAction() {
-        print("Share")
+        guard let image = selectedImage, let imageData = UIImageJPEGRepresentation(image, 0.7) else { return }
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        let filename = NSUUID().uuidString
+        Storage.storage().reference().child("posts").child(filename).putData(imageData, metadata: nil) {[weak self] (metadata, error) in
+            if let err = error {
+                self?.navigationItem.rightBarButtonItem?.isEnabled = true
+                print("Error while saving post image to database: ", err)
+                return
+            }
+            
+            guard let imageUrl = metadata?.downloadURL()?.absoluteString else { return }
+            self?.savePostToDatabase(with: imageUrl)
+        }
     }
     
+    func savePostToDatabase(with imageUrl: String) {
+        guard let postImage = selectedImage else { return }
+        guard let caption = textView.text else { return }
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let userPostRef = Database.database().reference().child("posts").child(uid)
+        let ref = userPostRef.childByAutoId()
+        let values = ["imageUrl": imageUrl, "caption": caption, "imageWidth": postImage.size.width, "imageHeight": postImage.size.height, "creationDate": Date().timeIntervalSince1970] as [String : Any]
+        ref.updateChildValues(values) {[weak self] (error, ref) in
+            if let err = error {
+                self?.navigationItem.rightBarButtonItem?.isEnabled = true
+                print("Error while saving post to database: ", err)
+                return
+            }
+            
+            self?.dismiss(animated: true, completion: nil)
+        }
+    }
 }
