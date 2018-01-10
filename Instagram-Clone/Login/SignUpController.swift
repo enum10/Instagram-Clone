@@ -69,6 +69,9 @@ class SignUpController: UIViewController {
         plusPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         setupInputFields()
+        
+        view.addSubview(alreadyHaveAccountButton)
+        alreadyHaveAccountButton.anchor(top: nil, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, topPadding: 0, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 50)
     }
     
     func setupInputFields() {
@@ -79,6 +82,20 @@ class SignUpController: UIViewController {
         
         view.addSubview(stackView)
         stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, topPadding: 20, leftPadding: 40, bottomPadding: 0, rightPadding: 40, width: 0, height: 200)
+    }
+    
+    let alreadyHaveAccountButton: UIButton = {
+        let view = UIButton(type: .system)
+        let attributedString = NSMutableAttributedString(string: "Already have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+        attributedString.append(NSAttributedString(string: "Sign in", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 204)]))
+        view.setAttributedTitle(attributedString, for: .normal)
+        view.addTarget(self, action: #selector(alreadyHaveAccountAction), for: .touchUpInside)
+        return view
+    }()
+    
+    @objc
+    func alreadyHaveAccountAction() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc
