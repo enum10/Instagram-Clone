@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import Photos
 
 class PhotoSelectorController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     let cellId = "cellId"
     let headerId = "headerId"
+    
+    var images = [UIImage]()
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -26,10 +29,12 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         
         collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
+        
+        fetchPhotos()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return images.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -64,6 +69,29 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsetsMake(1, 0, 0, 0)
+    }
+    
+    fileprivate func fetchPhotos() {
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.fetchLimit = 10
+        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
+        fetchOptions.sortDescriptors = [sortDescriptor]
+        let allPhotos = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+        allPhotos.enumerateObjects { (asset, index, stop) in
+            let imageManager = PHImageManager.default()
+            let options = PHImageRequestOptions()
+            options.isSynchronous = true
+            let size = CGSize(width: 350, height: 350)
+            imageManager.requestImage(for: asset, targetSize: size, contentMode: .aspectFit, options: options, resultHandler: {[weak self] (image, info) in
+                if let image = image {
+                    self?.images.append(image)
+                }
+                
+                if index == allPhotos.count - 1 {
+                    self?.collectionView?.reloadData()
+                }
+            })
+        }
     }
     
     fileprivate func setupNavigationBarButtons() {
