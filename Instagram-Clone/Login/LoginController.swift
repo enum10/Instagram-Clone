@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginController: UIViewController {
     
@@ -100,7 +101,17 @@ class LoginController: UIViewController {
     
     @objc
     func loginButtonAction() {
-        
+        guard let email = emailTextField.text, let password = passwordTextField.text else { return }
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] (user, error) in
+            if let err = error {
+                print("Error while signing in user with email: ", err)
+                return
+            }
+            
+            guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { return }
+            mainTabBarController.setupViewControllers()
+            self?.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc
