@@ -10,9 +10,25 @@ import UIKit
 
 class HomePostCell: UICollectionViewCell {
     
+    var post: Post? {
+        didSet {
+            guard let imageUrl = post?.imageUrl else { return }
+            imageView.loadImage(with: imageUrl)
+        }
+    }
+    
+    let imageView: CustomImageView = {
+        let view = CustomImageView()
+        view.backgroundColor = UIColor.rgb(red: 240, green: 240, blue: 240)
+        view.contentMode = .scaleAspectFill
+        view.clipsToBounds = true
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .blue
+        addSubview(imageView)
+        imageView.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, topPadding: 0, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 0)
     }
     
     required init?(coder aDecoder: NSCoder) {
