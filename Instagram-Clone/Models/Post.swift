@@ -11,9 +11,11 @@ import Foundation
 struct Post {
     let imageUrl: String
     let user: InstagramUser
+    let caption: String
     
     init(user: InstagramUser, dictionary: [String:Any]) {
         self.user = user
+        self.caption = dictionary["caption"] as? String ?? ""
         imageUrl = dictionary["imageUrl"] as? String ?? ""
     }
 }

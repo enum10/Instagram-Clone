@@ -17,6 +17,7 @@ class HomePostCell: UICollectionViewCell {
             userProfileImageView.loadImage(with: userImageUrl)
             guard let imageUrl = post?.imageUrl else { return }
             imageView.loadImage(with: imageUrl)
+            configureCaption()
         }
     }
     
@@ -76,11 +77,6 @@ class HomePostCell: UICollectionViewCell {
     
     let captionAndTimeLabel: UILabel = {
         let view = UILabel()
-        let attributedText = NSMutableAttributedString(string: "Username", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14)])
-        attributedText.append(NSAttributedString(string: "  Building Instagram application clone from scratch to add this project to Github", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]))
-        attributedText.append(NSAttributedString(string: "\n\n", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 4)]))
-        attributedText.append(NSAttributedString(string: "1 week ago", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.gray]))
-        view.attributedText = attributedText
         view.numberOfLines = 0
         return view
     }()
@@ -110,6 +106,15 @@ class HomePostCell: UICollectionViewCell {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    fileprivate func configureCaption() {
+        guard let post = post, post.caption.count > 0 else { return }
+        let attributedText = NSMutableAttributedString(string: post.user.username, attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14)])
+        attributedText.append(NSAttributedString(string: "  \(post.caption)", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]))
+        attributedText.append(NSAttributedString(string: "\n\n", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 4)]))
+        attributedText.append(NSAttributedString(string: "1 week ago", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.gray]))
+        captionAndTimeLabel.attributedText = attributedText
     }
     
     fileprivate func setupActionButtons() {
