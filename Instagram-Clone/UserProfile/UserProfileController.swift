@@ -87,14 +87,11 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
 
     func fetchUserData() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
-            guard let dictionary = snapshot.value as? [String: Any] else { return }
-            self?.user = InstagramUser(uid: uid, dictionary: dictionary)
+        Database.fetchUserWithUID(uid) {[weak self] (user) in
+            self?.user = user
             guard let username = self?.user?.username else { return }
             self?.navigationItem.title = username
             self?.collectionView?.reloadData()
-        }) { (error) in
-            print("Error getting user data in UserProfileController: ", error)
         }
     }
     
