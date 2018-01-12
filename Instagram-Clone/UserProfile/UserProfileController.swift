@@ -89,7 +89,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         guard let uid = Auth.auth().currentUser?.uid else { return }
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
             guard let dictionary = snapshot.value as? [String: Any] else { return }
-            self?.user = InstagramUser(dictionary: dictionary)
+            self?.user = InstagramUser(uid: uid, dictionary: dictionary)
             guard let username = self?.user?.username else { return }
             self?.navigationItem.title = username
             self?.collectionView?.reloadData()

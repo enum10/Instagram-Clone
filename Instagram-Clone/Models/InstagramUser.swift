@@ -11,8 +11,10 @@ import Foundation
 struct InstagramUser {
     var username: String
     var imageUrl: String
+    var uid: String
     
-    init(dictionary: [String: Any]) {
+    init(uid: String, dictionary: [String: Any]) {
+        self.uid = uid
         username = dictionary["username"] as? String ?? ""
         imageUrl = dictionary["imageUrl"] as? String ?? ""
     }
