@@ -10,8 +10,10 @@ import Foundation
 
 struct Post {
     let imageUrl: String
+    let user: InstagramUser
     
-    init(dictionary: [String:Any]) {
+    init(user: InstagramUser, dictionary: [String:Any]) {
+        self.user = user
         imageUrl = dictionary["imageUrl"] as? String ?? ""
     }
 }

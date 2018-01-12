@@ -17,6 +17,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo2"))
         collectionView?.backgroundColor = .white
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
         fetchPosts()
@@ -43,18 +44,24 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     fileprivate func fetchPosts() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        let ref = Database.database().reference().child("posts").child(uid)
-        ref.observeSingleEvent(of: .value, with: {[weak self] (snapshot) in
-            guard let dictionaries = snapshot.value as? [String:Any] else { return }
-            dictionaries.forEach({ (key, value) in
-                guard let dictionary = value as? [String:Any] else { return }
-                let post = Post(dictionary: dictionary)
-                self?.posts.append(post)
-            })
-            
-            self?.collectionView?.reloadData()
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let userDictionary = snapshot.value as? [String:Any] else { return }
+            let user = InstagramUser(dictionary: userDictionary)
+            let ref = Database.database().reference().child("posts").child(uid)
+            ref.observeSingleEvent(of: .value, with: {[weak self] (snapshot) in
+                guard let dictionaries = snapshot.value as? [String:Any] else { return }
+                dictionaries.forEach({ (key, value) in
+                    guard let dictionary = value as? [String:Any] else { return }
+                    let post = Post(user: user, dictionary: dictionary)
+                    self?.posts.append(post)
+                })
+                
+                self?.collectionView?.reloadData()
+            }) { (error) in
+                print("Error while downloading posts in home controller")
+            }
         }) { (error) in
-            print("Error while downloading posts in home controller")
+            print("Error while downloading user in HomeController: ", error)
         }
     }
 }

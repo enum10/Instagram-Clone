@@ -12,6 +12,9 @@ class HomePostCell: UICollectionViewCell {
     
     var post: Post? {
         didSet {
+            usernameLabel.text = post?.user.username
+            guard let userImageUrl = post?.user.imageUrl else { return }
+            userProfileImageView.loadImage(with: userImageUrl)
             guard let imageUrl = post?.imageUrl else { return }
             imageView.loadImage(with: imageUrl)
         }
@@ -19,7 +22,7 @@ class HomePostCell: UICollectionViewCell {
     
     let userProfileImageView: CustomImageView = {
         let view = CustomImageView()
-        view.backgroundColor = .blue
+        view.backgroundColor = UIColor.rgb(red: 240, green: 240, blue: 240)
         view.contentMode = .scaleToFill
         view.clipsToBounds = true
         return view
