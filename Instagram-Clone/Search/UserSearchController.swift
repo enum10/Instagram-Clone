@@ -8,7 +8,7 @@
 
 import UIKit
 
-class UserSearchController: UICollectionViewController {
+class UserSearchController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     let cellId = "cellId"
     
@@ -23,5 +23,21 @@ class UserSearchController: UICollectionViewController {
         super.viewDidLoad()
         collectionView?.backgroundColor = .white
         navigationItem.titleView = searchBar
+        collectionView?.alwaysBounceVertical = true
+        collectionView?.register(UserSearchCell.self, forCellWithReuseIdentifier: cellId)
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! UserSearchCell
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let height: CGFloat = 8 + 50 + 8
+        return CGSize(width: view.frame.width, height: height)
     }
 }
