@@ -10,12 +10,19 @@ import UIKit
 
 class UserSearchCell: UICollectionViewCell {
     
+    var user: InstagramUser? {
+        didSet {
+            usernameLabel.text = user?.username
+            guard let userImageUrl = user?.imageUrl else { return }
+            userImageView.loadImage(with: userImageUrl)
+        }
+    }
+    
     let userImageView: CustomImageView = {
         let view = CustomImageView()
         view.contentMode = .scaleAspectFill
         view.clipsToBounds = true
-//        view.backgroundColor = UIColor.rgb(red: 240, green: 240, blue: 240)
-        view.backgroundColor = .red
+        view.backgroundColor = UIColor.rgb(red: 240, green: 240, blue: 240)
         return view
     }()
     
