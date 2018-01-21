@@ -49,11 +49,21 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
         return CGSize(width: view.frame.width, height: height)
     }
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let user = filteredUsers[indexPath.item]
+        let userProfileController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
+        userProfileController.userId = user.uid
+        self.navigationController?.pushViewController(userProfileController, animated: true)
+    }
+    
     fileprivate func fetchUsers() {
        let ref = Database.database().reference().child("users")
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             guard let dictionaries = snapshot.value as? [String:Any] else { return }
             dictionaries.forEach({ (key, value) in
+                if key == Auth.auth().currentUser?.uid {
+                    return
+                }
                 guard let dictionary = value as? [String:Any] else { return }
                 let user = InstagramUser(uid: key, dictionary: dictionary)
                 self.users.append(user)

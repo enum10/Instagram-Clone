@@ -21,19 +21,19 @@ class CustomImageView: UIImageView {
         }
         
         guard let url = URL(string: urlString) else { return }
-        URLSession.shared.dataTask(with: url) {[weak self] (data, response, error) in
+        URLSession.shared.dataTask(with: url) {(data, response, error) in
             if let error = error {
                 print("Error while downloading image in UserProfilePhotoCell: ", error)
                 return
             }
             
-            if url.absoluteString != self!.lastUrlStringUsedToLoad {
+            if url.absoluteString != self.lastUrlStringUsedToLoad {
                 return
             }
             
             guard let imageData = data else { return }
             let image = UIImage(data: imageData)
-            self?.imageCache[url.absoluteString] = image
+            self.imageCache[url.absoluteString] = image
             DispatchQueue.main.async { [weak self] in
                 self?.image = image
             }

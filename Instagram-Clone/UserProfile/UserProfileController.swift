@@ -13,6 +13,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     var user: InstagramUser?
     var posts = [Post]()
+    var userId: String?
     
     let cellId = "cellId"
     
@@ -26,7 +27,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         collectionView?.register(UserProfilePhotoCell.self, forCellWithReuseIdentifier: cellId)
         
         setupLogOutButton()
-        fetchPosts()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -86,17 +86,18 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     }
 
     func fetchUserData() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let uid = userId ?? Auth.auth().currentUser?.uid ?? ""
         Database.fetchUserWithUID(uid) {[weak self] (user) in
             self?.user = user
             guard let username = self?.user?.username else { return }
             self?.navigationItem.title = username
             self?.collectionView?.reloadData()
+            self?.fetchPosts()
         }
     }
     
     func fetchPosts() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
+        guard let uid = user?.uid else { return }
         let ref = Database.database().reference().child("posts").child(uid)
         ref.queryOrdered(byChild: "creationDate").observe(.childAdded, with: {[weak self] (snapshot) in
             guard let dictionary = snapshot.value as? [String: Any] else { return }
