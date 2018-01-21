@@ -20,7 +20,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo2"))
         collectionView?.backgroundColor = .white
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
-        fetchPosts()
+        fetchMyPosts()
+        fetchFollowingUserIDs()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -41,10 +42,24 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         return CGSize(width: view.frame.size.width, height: height)
     }
     
-    fileprivate func fetchPosts() {
+    fileprivate func fetchMyPosts() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         Database.fetchUserWithUID(uid) { (user) in
             self.fetchPostsWithUser(user: user)
+        }
+    }
+    
+    fileprivate func fetchFollowingUserIDs() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        Database.database().reference().child("following").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            guard let userIDsDictionary = snapshot.value as? [String:Any] else { return }
+            userIDsDictionary.forEach({ (key, value) in
+                Database.fetchUserWithUID(key, completion: { (user) in
+                    self.fetchPostsWithUser(user: user)
+                })
+            })
+        }) { (err) in
+            print("Error while fetching following user posts: ", err)
         }
     }
     
@@ -57,7 +72,9 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 let post = Post(user: user, dictionary: dictionary)
                 self?.posts.append(post)
             })
-            
+            self?.posts.sort(by: { (post1, post2) -> Bool in
+                return post1.creationDate.compare(post2.creationDate) == .orderedDescending
+            })
             self?.collectionView?.reloadData()
         }) { (error) in
             print("Error while downloading posts in home controller")
