@@ -42,6 +42,7 @@ class CameraController: UIViewController {
         dismissButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: view.rightAnchor, topPadding: 12, leftPadding: 0, bottomPadding: 0, rightPadding: 12, width: 50, height: 50)
     }
     
+    let output = AVCapturePhotoOutput()
     fileprivate func setupCaptureSession() {
         let captureSession = AVCaptureSession()
         
@@ -55,7 +56,7 @@ class CameraController: UIViewController {
             print("Error while adding capture input: ", error)
         }
         
-        let output = AVCapturePhotoOutput()
+        
         if captureSession.canAddOutput(output) {
             captureSession.addOutput(output)
         }
@@ -74,6 +75,19 @@ class CameraController: UIViewController {
     
     @objc
     func captureAction() {
-        print("Capture photo...")
+        let settings = AVCapturePhotoSettings()
+        guard let previewFormatType = settings.availablePreviewPhotoPixelFormatTypes.first else { return }
+        settings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewFormatType]
+        output.capturePhoto(with: settings, delegate: self)
+    }
+}
+
+extension CameraController: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        guard let imageData = photo.fileDataRepresentation() else { return }
+        let previewImage = UIImage(data: imageData)
+        let previewImageView = UIImageView(image: previewImage)
+        view.addSubview(previewImageView)
+        previewImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, topPadding: 0, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 0)
     }
 }
