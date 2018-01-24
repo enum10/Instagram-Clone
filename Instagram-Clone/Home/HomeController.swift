@@ -17,6 +17,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateFeed), name: SharePhotoController.updateNotificationName, object: nil)
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo2"))
         collectionView?.backgroundColor = .white
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
@@ -53,6 +54,11 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     func handleRefresh() {
         posts.removeAll()
         fetchAllPosts()
+    }
+    
+    @objc
+    func updateFeed() {
+        handleRefresh()
     }
     
     fileprivate func fetchMyPosts() {
