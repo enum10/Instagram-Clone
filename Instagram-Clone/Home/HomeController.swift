@@ -18,13 +18,18 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(updateFeed), name: SharePhotoController.updateNotificationName, object: nil)
-        navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo2"))
+        setupNavigationItems()
         collectionView?.backgroundColor = .white
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         collectionView?.refreshControl = refreshControl
         fetchAllPosts()
+    }
+    
+    fileprivate func setupNavigationItems() {
+        navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo2"))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "camera3").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(cameraAction))
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -59,6 +64,12 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     @objc
     func updateFeed() {
         handleRefresh()
+    }
+    
+    @objc
+    func cameraAction() {
+        let cameraController = CameraController()
+        present(cameraController, animated: true, completion: nil)
     }
     
     fileprivate func fetchMyPosts() {
