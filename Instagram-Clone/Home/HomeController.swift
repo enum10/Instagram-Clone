@@ -20,8 +20,10 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "logo2"))
         collectionView?.backgroundColor = .white
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
-        fetchMyPosts()
-        fetchFollowingUserIDs()
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView?.refreshControl = refreshControl
+        fetchAllPosts()
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -34,12 +36,22 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         return cell
     }
     
+    func fetchAllPosts() {
+        fetchMyPosts()
+        fetchFollowingUserIDs()
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var height: CGFloat = 8 + 40 + 8
         height += view.frame.size.width
         height += 50
         height += 60
         return CGSize(width: view.frame.size.width, height: height)
+    }
+    
+    @objc
+    func handleRefresh() {
+        fetchAllPosts()
     }
     
     fileprivate func fetchMyPosts() {
