@@ -31,7 +31,7 @@ class CameraController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        transitioningDelegate = self
         setupCaptureSession()
         
         setupHUD()
@@ -84,6 +84,9 @@ class CameraController: UIViewController {
         settings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: previewFormatType]
         output.capturePhoto(with: settings, delegate: self)
     }
+    
+    let customAnimationPresenter = CustomAnimationPresenter()
+    let customAnimationDismisser = CustomAnimationDismisser()
 }
 
 extension CameraController: AVCapturePhotoCaptureDelegate {
@@ -94,5 +97,16 @@ extension CameraController: AVCapturePhotoCaptureDelegate {
         previewView.previewImageView.image = previewImage
         view.addSubview(previewView)
         previewView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, topPadding: 0, leftPadding: 0, bottomPadding: 0, rightPadding: 0, width: 0, height: 0)
+    }
+}
+
+extension CameraController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return customAnimationPresenter
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return customAnimationDismisser
     }
 }
