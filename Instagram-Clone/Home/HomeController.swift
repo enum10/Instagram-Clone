@@ -51,6 +51,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     @objc
     func handleRefresh() {
+        posts.removeAll()
         fetchAllPosts()
     }
     
@@ -79,6 +80,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let ref = Database.database().reference().child("posts").child(user.uid)
         ref.observeSingleEvent(of: .value, with: {[weak self] (snapshot) in
             guard let dictionaries = snapshot.value as? [String:Any] else { return }
+            self?.collectionView?.refreshControl?.endRefreshing()
             dictionaries.forEach({ (key, value) in
                 guard let dictionary = value as? [String:Any] else { return }
                 let post = Post(user: user, dictionary: dictionary)
